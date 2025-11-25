@@ -1,0 +1,98 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage[backend=bibtex, style=numeric, sorting=none]{biblatex}
+\usepackage{geometry}
+\usepackage{hyperref}  % ditambahkan untuk email yang bisa diklik
+\geometry{a4paper, margin=1in}
+
+% --- BIBLIOGRAPHY ---
+\begin{filecontents}{references.bib}
+@article{dinh2016density,
+  title={Density estimation using Real NVP},
+  author={Dinh, Laurent and Sohl-Dickstein, Jascha and Bengio, Samy},
+  journal={International Conference on Learning Representations (ICLR)},
+  year={2017}
+}
+
+@article{neal2017real,
+  title={Real-valued (not just binary) information is physical},
+  author={Neal, Radford M and Hinton, Geoffrey E},
+  journal={arXiv preprint arXiv:1710.10099},
+  year={2017}
+}
+
+@article{mandt2017stochastic,
+  title={Stochastic gradient descent as approximate Bayesian inference},
+  author={Mandt, Stephan and Hoffmann, Matthew D and Blei, David M},
+  journal={International Conference on Machine Learning (ICML)},
+  volume={70},
+  pages={3701--3710},
+  year={2017}
+}
+\end{filecontents}
+\addbibresource{references.bib}
+
+\title{\textbf{WaterFlow:} A Reversible Generative Model Trained under Thermodynamic Constraints}
+
+\author{
+  \textbf{Hari Hardiyan} \\
+  Independent Researcher \\
+  \texttt{lorozloraz@gmail.com} \\
+  \href{mailto:lorozloraz@gmail.com}{\texttt{lorozloraz@gmail.com}}
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The \textbf{WaterFlow} model, based on Normalizing Flows, is proposed as a generative system adhering to the principles of reversible computing and thermodynamics. We enforce structural simplicity and non-dissipative data flow by minimizing the Helmholtz Free Energy, $\mathcal{F}$, which balances task performance against the informational entropy of the model's weights.
+\end{abstract}
+
+\section{Reversible Architecture: Affine Coupling}
+
+The core of the WaterFlow model is the \textbf{Affine Coupling Layer}, which ensures a bijective (perfectly reversible) transformation. The input $\mathbf{x}$ is partitioned into two halves, $\mathbf{x}_a$ and $\mathbf{x}_b$, where $\mathbf{x}_a$ is unchanged, and $\mathbf{x}_b$ is transformed by functions $s(\cdot)$ (scaling) and $t(\cdot)$ (translation) of $\mathbf{x}_a$. The output $\mathbf{y}$ is given by:
+
+\begin{equation}
+\label{eq:affine}
+\begin{split}
+\mathbf{y}_a &= \mathbf{x}_a \\
+\mathbf{y}_b &= \mathbf{x}_b \odot \exp(s(\mathbf{x}_a)) + t(\mathbf{x}_a)
+\end{split}
+\end{equation}
+where $\odot$ denotes the Hadamard (element-wise) product. This layer is non-dissipative and perfectly invertible.
+
+\section{Thermodynamic Loss Formulation}
+
+Training is driven by minimizing the \textbf{Thermodynamic Free Energy ($\mathcal{F}$)}, defined as:
+\begin{equation}
+\label{eq:free_energy}
+\mathcal{L}_{\text{Thermo}} = \mathcal{F} = \beta \cdot E_{\text{Task}} - \lambda \cdot S_{\text{Reg}}
+\end{equation}
+
+\subsection{Task Energy ($E_{\text{Task}}$)}
+The Task Energy, $E_{\text{Task}}$, is the \textbf{Negative Log-Likelihood (NLL)} of the data under the change-of-variables formula for Normalizing Flows \cite{dinh2016density}:
+
+\begin{equation}
+\label{eq:e_task}
+E_{\text{Task}} = -\mathbb{E}_{\mathbf{x} \sim p_{\text{data}}} \left[ \log p_{\mathbf{z}}(f(\mathbf{x})) + \log \left| \det \frac{\partial f}{\partial \mathbf{x}} \right| \right]
+\end{equation}
+where $\mathbf{z} = f(\mathbf{x})$ is the latent representation and the log-determinant is the sum over all coupling layers.
+
+\subsection{Regularization Entropy ($S_{\text{Reg}}$)}
+The regularization entropy $S_{\text{Reg}}$ is the \textbf{Shannon entropy of the absolute model weights} $\Theta$, encouraging structural simplicity and thermodynamic efficiency \cite{neal2017real, mandt2017stochastic}:
+
+\begin{equation}
+\label{eq:s_reg}
+S_{\text{Reg}} = -\sum_{i} p_{i} \ln p_{i}, \quad p_{i} = \frac{|\theta_{i}|}{\sum_{j} |\theta_{j}|}
+\end{equation}
+
+\subsection{Annealing Schedule}
+We employ \textbf{$\beta$-annealing}, gradually increasing the inverse temperature $\beta$ from 0 to 1 during training. This schedule first favors exploration (high entropy configurations) and progressively enforces convergence to a low-energy, low-complexity equilibrium that minimizes $\mathcal{F}$.
+
+\printbibliography
+
+\end{document}
