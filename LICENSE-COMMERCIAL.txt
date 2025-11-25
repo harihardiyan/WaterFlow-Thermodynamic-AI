@@ -1,0 +1,12 @@
+Commercial License
+
+This file serves as a placeholder for the terms and conditions governing the commercial use, distribution, and incorporation of the WaterFlow-Thermodynamic-AI software into proprietary products or services.
+
+All commercial rights are reserved by the copyright holder.
+
+Commercial users must obtain a separate, negotiated commercial license agreement from the author prior to any commercial use.
+
+Contact the author for licensing details.
+
+---
+Copyright (c) 2025 All Commercial
