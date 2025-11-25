@@ -1,3 +1,9 @@
+<div align="center">
+
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.17715490.svg)](https://doi.org/10.5281/zenodo.17715490)
+
+</div>
+
 # WaterFlow-Thermodynamic-AI
 
 ## 💧 Overview: Reversible AI Trained with Thermodynamic Loss
@@ -29,9 +35,10 @@ This project requires PyTorch and standard libraries:
 pip install torch torchvision numpy
 ```
 ###Training
-1. Save the Python code above as waterflow_model.py.
+**1. Save the Python code above as waterflow_model.py**
 
-2.Run the script. It will automatically download the MNIST dataset and begin training on a CUDA device (GPU) if available.
+**2.Run the script. It will automatically download the MNIST dataset and begin training on a CUDA device (GPU) if available.**
+
 ```bash
 python waterflow_model.py
 ```
